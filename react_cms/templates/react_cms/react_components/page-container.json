@@ -1,0 +1,18 @@
+{
+  "info": {
+    "title": "Page Container",
+    "identifier": "page-container",
+    "editableProps": {}
+  },
+  "representation": {
+    "props": {
+      "className": "view-spacer"
+    },
+    "children": {
+      "props": {
+        "className": "container"
+      },
+      "children": ["@@children"]
+    }
+  }
+}

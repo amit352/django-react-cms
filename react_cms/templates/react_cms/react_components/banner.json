@@ -1,0 +1,28 @@
+{
+  "info": {
+    "title": "Banner",
+    "identifier": "banner",
+    "editableProps": {
+      "title": {
+        "label": "Header",
+        "type": "string"
+      },
+      "subtitle": {
+        "label": "Subheader",
+        "type": "string"
+      },
+      "image": {
+        "label": "Image link",
+        "type": "string"
+      }
+    }
+  },
+  "representation": {
+    "component": "section.banner",
+    "props": {
+      "title": "@title",
+      "subtitle": "@subtitle",
+      "image": "@image"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "info": {
+    "title": "Youtube Video",
+    "identifier": "youtube-video",
+    "editableProps": {
+      "src": {
+        "type": "string",
+        "label": "Source"
+      }
+    }
+  },
+  "representation": {
+    "component": "video",
+    "children": [],
+    "props": {
+      "src": "@src"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "info": {
+    "title": "Paragraph",
+    "identifier": "paragraph",
+    "editableProps": {
+      "text": {
+        "type": "text",
+        "label": "Paragraph Text"
+      }
+    }
+  },
+  "representation": {
+    "type": "p",
+    "children": ["@text"]
+  }
+}

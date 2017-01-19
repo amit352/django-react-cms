@@ -1,0 +1,98 @@
+<script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- Node editor -->
+{% include "react_cms/vue_components/node-prop-editor.html" %}
+{% include "react_cms/vue_components/node-mover.html" %}
+{% include "react_cms/vue_components/node-editor.html" %}
+
+<!-- Modals -->
+{% include "react_cms/vue_components/modal.html" %}
+{% include "react_cms/vue_components/component-selector.html" %}
+{% include "react_cms/vue_components/internationalize-modal.html" %}
+
+{% verbatim %}
+<div id="resource-editor">
+  <node-editor :children="nodes"></node-editor>
+
+  <component-selector-modal></component-selector-modal>
+
+  <input type="hidden" name="json" v-bind:value="JSON.stringify(nodes)">
+  {{ nodes }}
+</div>
+{% endverbatim %}
+
+{% if value != "None" %}
+  {% comment %}We check against "None" string because of mark_safe{% endcomment %}
+  <script>
+    var startNodes = {{value}};
+  </script>
+{% else %}
+  <script>
+    var startNodes = [
+      {
+        title: "Base Component",
+        identifier: "root",
+        editableProps: {},
+        nodes: [],
+      },
+    ];
+  </script>
+{% endif %}
+
+<script>
+var app = new Vue({
+  el: '#resource-editor',
+  data: {
+    nodes: startNodes,
+    availableComponents: {{ components_json }},
+    availableLanguages: ['pt-BR', 'es-ES'],
+    // Component modal
+    showComponentSelector: false,
+    addComponentTo: false,
+  },
+  mounted: function() {
+    this.$on('updateComponentsData', function() {
+      // This update a component data, such as editableProps from the lastest component version in availableComponents
+      // useful in case you don't want to delete and recreate the component after updating it
+      this.recursiveDataUpdate(this.nodes);
+    });
+    this.recursiveDataUpdate(this.nodes);
+  },
+  methods: {
+    recursiveDataUpdate: function(nodeList) {
+      var vm = this;
+
+      _.forEach(nodeList, function(node, index) {
+        if (node.identifier != "root") {
+          updatedComponent = vm.findComponentByIdentifier(node.identifier);
+
+          node.title = updatedComponent.title;
+          node.editableProps = updatedComponent.editableProps;
+          _.forEach(node.props, function(value, key) {
+            if (_.isUndefined(node.editableProps[key])) {
+              // Prop doesn't exist anymore
+              delete node.props[key];
+            } else if (!_.isUndefined(node.editableProps[key]['choices']) && !_.includes(node.editableProps[key]['choices'], value)) {
+              // Current value not a possible choice anymore
+              Vue.set(node.props[key], null);
+            }
+          });
+
+          // new props
+          _.forEach(node.editableProps, function(value, key) {
+            if (_.isUndefined(node.props[key])) {
+              Vue.set(node.props[key], null);
+            }
+          });
+        }
+        vm.recursiveDataUpdate(node.nodes);
+      });
+    },
+
+    findComponentByIdentifier: function(identifier) {
+      return _.find(this.availableComponents, { identifier: identifier });
+    }
+  }
+});
+</script>

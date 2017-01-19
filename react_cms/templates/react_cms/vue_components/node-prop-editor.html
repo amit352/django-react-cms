@@ -1,0 +1,73 @@
+{% verbatim %}
+<script type="text/x-template" id="node-prop-editor">
+  <div class="c-node-prop-editor">
+    <div class="prop-input" v-for="(value, key) in node.editableProps">
+      <label>{{ value.label }}
+        <!-- Internationalize switch -->
+        <a href="#" class="internationalize" v-if="_.isUndefined(value.choices)" @click.prevent="showInternationalizeModal = key">
+          <i class="fa fa-language"></i>
+        </a>
+
+        <!-- Edit fields -->
+        <div v-if="!_.isUndefined(value.choices)">
+          <select v-model="node.props[key]">
+            <option v-for="choice in value.choices" v-bind:value="choice">{{choice}}</option>
+          </select>
+        </div>
+        <div v-else>
+          <div v-if="value.type == 'string'">
+            <input type="text" class="form-control" v-model="node.props[key]">
+          </div>
+
+          <div v-if="value.type == 'text'">
+            <textarea type="text" class="form-control" v-model="node.props[key]"></textarea>
+          </div>
+        </div>
+      </label>
+    </div>
+
+    <!-- Internationalize modal -->
+    <internationalize-modal :node="node"></internationalize-modal>
+  </div>
+</script>
+{% endverbatim %}
+
+<script>
+Vue.component('node-prop-editor', {
+  template: '#node-prop-editor',
+  props: ["node"],
+  data: function() {
+    return {showInternationalizeModal: false};
+  },
+  methods: {
+  }
+})
+</script>
+
+<style>
+.c-node-prop-editor {
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+  padding: 15px 25px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.c-node-prop-editor label {
+  width: 100%;
+}
+
+.c-node-prop-editor label textarea {
+  height: 100px;
+}
+
+.c-node-prop-editor .prop-input {
+  margin-bottom: 10px;
+}
+
+.c-node-prop-editor .internationalize {
+  font-size: 20px;
+  color: #4f7dda;
+  margin-left: 10px;
+}
+</style>
+

@@ -1,0 +1,55 @@
+{% verbatim %}
+<script type="text/x-template" id="component-selector-modal">
+  <modal v-if="$root.showComponentSelector" class="c-component-selector-modal">
+    <h3 slot="header">Choose a component</h3>
+    <div slot="body">
+      <ul>
+        <li v-for="component in $root.availableComponents" @click="addComponent(component)">{{ component.title }}</li>
+      </ul>
+    </div>
+    <div slot="footer">
+      <button class="modal-button" @click.prevent="close()">
+        Cancel
+      </button>
+    </div>
+  </modal>
+</script>
+{% endverbatim %}
+
+<script>
+Vue.component('component-selector-modal', {
+  template: '#component-selector-modal',
+  methods: {
+    addComponent: function(component) {
+      var copy = _.cloneDeep(component)
+      Vue.set(copy, 'nodes', []);
+      this.$root.addComponentTo.nodes.push(copy);
+      this.close();
+    },
+    close: function() {
+      this.$root.showComponentSelector = false;
+      this.$root.addComponentTo = false;
+    }
+  }
+})
+</script>
+
+<style>
+  .c-component-selector-modal ul {
+    list-style: none;
+    padding-left: 0px;
+  }
+
+  .c-component-selector-modal ul li {
+    background: #f0f0f0;
+    cursor: pointer;
+    padding: 6px 10px;
+    margin-bottom: 1px;
+    border-radius: 3px;
+    font-size: 16px;
+  }
+
+  .c-component-selector-modal ul li:hover {
+    background: #e0e0e0;
+  }
+</style>

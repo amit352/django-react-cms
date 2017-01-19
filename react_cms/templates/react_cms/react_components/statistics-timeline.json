@@ -1,0 +1,11 @@
+{
+  "info": {
+    "title": "Statistics Timeline",
+    "identifier": "statistics-timeline",
+    "editableProps": {}
+  },
+  "representation": {
+    "component": "statistics-timeline",
+    "children": ["@@children"]
+  }
+}

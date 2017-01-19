@@ -1,0 +1,34 @@
+{
+  "info": {
+    "title": "Statistics Timeline Item",
+    "identifier": "statistics-timeline-item",
+    "editableProps": {
+      "year": {
+        "type": "string",
+        "label": "Year"
+      },
+      "volunteers": {
+        "type": "string",
+        "label": "Volunteers"
+      },
+      "projects": {
+        "type": "string",
+        "label": "Projects"
+      },
+      "countries": {
+        "type": "string",
+        "label": "Countries"
+      }
+    }
+  },
+  "representation": {
+    "component": "timeline-item",
+    "children": [],
+    "props": {
+      "year": "@year",
+      "volunteers": "@volunteers",
+      "projects": "@projects",
+      "countries": "@countries"
+    }
+  }
+}

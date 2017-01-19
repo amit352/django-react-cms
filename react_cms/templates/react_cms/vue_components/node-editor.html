@@ -1,0 +1,101 @@
+{% verbatim %}
+<script type="text/x-template" id="node-editor">
+  <div class="c-node-editor">
+    <div class="node" v-for="(node, index) in children">
+      <h3 class="title" v-bind:class="{ 'editing-props': (editProps === index) }">{{ node.title }}
+        <div class="buttons">
+          <div class="edit">
+            <a href="#" @click.prevent="togglePropsEdit(index)" title="Edit component properties"><i class="fa fa-edit"></i></a>
+          </div>
+          <div class="modify">
+            <a href="#" @click.prevent="$root.showComponentSelector = true; $root.addComponentTo = node" title="Add child component"><i class="fa fa-plus"></i></a>
+            <a href="#" @click.prevent="removeNode(index)" title="Remove component"><i class="fa fa-remove"></i></a>
+          </div>
+          <div class="move">
+            <a href="#" @click.prevent="showMover = index" title="Move component"><i class="fa fa-arrows-alt"></i></a>
+          </div>
+        </div>
+      </h3>
+
+      <node-prop-editor v-if="editProps === index" :node="node"></node-prop-editor>
+
+      <node-mover v-if="showMover === index" :node="node"></node-mover>
+
+      <div class="children">
+        <node-editor :children="node.nodes"></node-editor>
+      </div>
+    </div>
+  </div>
+</script>
+{% endverbatim %}
+
+<script>
+Vue.component('node-editor', {
+  template: '#node-editor',
+  props: ['children'],
+  data: function() {
+    return {
+      showMover: false,
+      editProps: false,
+    }
+  },
+  methods: {
+    removeNode: function(index) {
+      if (confirm("Do you want to delete this component? Child components will also be removed. This cannot be undone.")) {
+        this.children.splice(index, 1);
+      }
+    },
+    togglePropsEdit: function(index) {
+      if (this.editProps !== index) {
+        this.editProps = index;
+      } else {
+        this.editProps = false;
+      }
+    }
+  }
+})
+</script>
+
+<style>
+  .c-node-editor .node {
+    margin-bottom: 3px;
+    position: relative;
+  }
+
+  .c-node-editor .node h3.title {
+    font-size: 14px;
+    background: #ccc;
+    padding: 10px;
+    margin: 0px 0px;
+    border-radius: 6px;
+  }
+
+  .c-node-editor .node h3 .buttons {
+    float: right;
+  }
+
+  .c-node-editor .node h3 .buttons > div {
+    display: inline-block;
+  }
+
+  .c-node-editor .node h3 .buttons > div:not(:last-child) {
+    margin-right: 15px;
+  }
+
+  .c-node-editor .node-mover a.not-active {
+    color: #ccc;
+    pointer-events: none;
+    cursor: normal;
+  }
+
+  .c-node-editor .node .children {
+    padding-left: 10px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+  }
+
+  .c-node-editor .node h3.editing-props {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+</style>

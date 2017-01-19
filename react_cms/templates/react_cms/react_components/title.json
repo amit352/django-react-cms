@@ -1,0 +1,29 @@
+{
+  "info": {
+    "title": "Title",
+    "identifier": "title",
+    "editableProps": {
+      "text": {
+        "type": "string",
+        "label": "Title"
+      },
+      "kind": {
+        "type": "string",
+        "label": "Type",
+        "choices": ["h1", "h2", "h3", "h4", "h5", "h6"]
+      },
+      "className": {
+        "type": "string",
+        "label": "Modifier class",
+        "choices": ["", "text-primary"]
+      }
+    }
+  },
+  "representation": {
+    "type": "@kind",
+    "children": ["@text"],
+    "props": {
+      "className": "@className"
+    }
+  }
+}

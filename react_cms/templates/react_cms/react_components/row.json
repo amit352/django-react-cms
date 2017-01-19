@@ -1,0 +1,11 @@
+{
+  "info": {
+    "title": "Row",
+    "identifier": "row",
+    "editableProps": {}
+  },
+  "representation": {
+    "type": "div",
+    "children": ["@@children"]
+  }
+}
