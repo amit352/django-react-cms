@@ -1,6 +1,6 @@
 {% verbatim %}
 <script type="text/x-template" id="internationalize-modal">
-  <modal v-if="$parent.showInternationalizeModal" class="c-internationalize-modal">
+  <modal class="c-internationalize-modal">
     <h3 slot="header">Internationalize field</h3>
     <div slot="body">
       <table class="table-fill">
@@ -16,11 +16,22 @@
           <td>{{ key }}</td>
           <td>
             <div v-if="editingField == key">  
-              <textarea id="" v-model="node.messages[key]"></textarea>
+              <prop-value-editor v-on:change="node.messages[key][$parent.showInternationalizeModal]=$event" :value="node.messages[key][$parent.showInternationalizeModal]" :value-type="node.editableProps[$parent.showInternationalizeModal].type"></prop-value-editor>
             </div>
-            <span v-else>{{ value }}</span>
+            <span v-else>
+              <span class="no-translation" v-if="_.isUndefined(value[$parent.showInternationalizeModal])">
+                (no translation)
+              </span>
+              <span v-else>
+                {{ value[$parent.showInternationalizeModal] }}
+              </span>
+            </span>
+
             <a href="#" class="edit-cell" @click.prevent="toggleEditingField(key)">
               <i class="fa fa-pencil"></i>
+            </a>
+            <a href="#" v-if="editingField !== key" class="remove-cell" @click.prevent="removeField(key)">
+              <i class="fa fa-trash"></i>
             </a>
           </td>
         </tr>
@@ -70,20 +81,30 @@ Vue.component('internationalize-modal', {
     },
     addTranslation: function() {
       if (_.isUndefined(this.node.messages)) {
-        var messages = {};
-        messages[this.choosenLanguage] = '';
-        Vue.set(this.node, 'messages', messages);
-      } else {
-        Vue.set(this.node.messages, this.choosenLanguage, '');
+        Vue.set(this.node, 'messages', {});
+      } 
+
+      if (_.isUndefined(this.node.messages[this.choosenLanguage])) {
+        Vue.set(this.node.messages, this.choosenLanguage, {});
       }
     },
     toggleEditingField: function(key) {
-      if (this.editingField === false) {
+      if (this.editingField !== key) {
         this.editingField = key;
-      } else if (this.editingField === key) {
+      } else {
         this.editingField = false;
       }
-    }
+    },
+    removeField: function(key) {
+      Vue.delete(this.node.messages[key], this.$parent.showInternationalizeModal);
+
+      if (_.size(this.node.messages[key]) === 0) {
+        Vue.delete(this.node.messages, key);
+      }
+    },
+  },
+  mounted: function() {
+    this.editingField = false;
   }
 })
 </script>
@@ -217,7 +238,8 @@ Vue.component('internationalize-modal', {
     white-space: nowrap;
   }
 
-  .c-internationalize-modal .edit-cell {
+  .c-internationalize-modal .edit-cell,
+  .c-internationalize-modal .remove-cell {
     position: absolute;
     background: white;
     border-radius: 50%;
@@ -230,6 +252,15 @@ Vue.component('internationalize-modal', {
     color: #4f7dda;
     right: -10px;
     top: 14px;
+  }
+
+  .c-internationalize-modal .remove-cell {
+    right: -40px;
+  }
+
+  .c-internationalize-modal .no-translation {
+    font-size: 11px;
+    font-style: italic;
   }
 
 </style>

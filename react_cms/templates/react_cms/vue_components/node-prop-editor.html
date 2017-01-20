@@ -9,25 +9,12 @@
         </a>
 
         <!-- Edit fields -->
-        <div v-if="!_.isUndefined(value.choices)">
-          <select v-model="node.props[key]">
-            <option v-for="choice in value.choices" v-bind:value="choice">{{choice}}</option>
-          </select>
-        </div>
-        <div v-else>
-          <div v-if="value.type == 'string'">
-            <input type="text" class="form-control" v-model="node.props[key]">
-          </div>
-
-          <div v-if="value.type == 'text'">
-            <textarea type="text" class="form-control" v-model="node.props[key]"></textarea>
-          </div>
-        </div>
+        <prop-value-editor v-on:change="node.props[key]=$event" :value="node.props[key]" :value-type="value.type" :choices="value.choices"></prop-value-editor>
       </label>
     </div>
 
     <!-- Internationalize modal -->
-    <internationalize-modal :node="node"></internationalize-modal>
+    <internationalize-modal v-if="showInternationalizeModal"  :node="node"></internationalize-modal>
   </div>
 </script>
 {% endverbatim %}

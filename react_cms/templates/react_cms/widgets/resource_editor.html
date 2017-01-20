@@ -5,6 +5,7 @@
 {% include "react_cms/vue_components/node-prop-editor.html" %}
 {% include "react_cms/vue_components/node-mover.html" %}
 {% include "react_cms/vue_components/node-editor.html" %}
+{% include "react_cms/vue_components/prop-value-editor.html" %}
 
 <!-- Modals -->
 {% include "react_cms/vue_components/modal.html" %}
@@ -46,7 +47,7 @@ var app = new Vue({
   data: {
     nodes: startNodes,
     availableComponents: {{ components_json }},
-    availableLanguages: ['pt-BR', 'es-ES'],
+    availableLanguages: {{ available_languages }},
     // Component modal
     showComponentSelector: false,
     addComponentTo: false,

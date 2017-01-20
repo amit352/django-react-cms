@@ -1,0 +1,40 @@
+{% verbatim %}
+<script type="text/x-template" id="prop-value-editor">
+  <div class="c-prop-value-editor">
+    <div v-if="!_.isUndefined(choices)">
+      <select v-model="fieldValue">
+        <option v-for="choice in choices" v-bind:value="choice">{{choice}}</option>
+      </select>
+    </div>
+    <div v-else>
+      <div v-if="valueType == 'string'">
+        <input type="text" class="form-control" v-model="fieldValue">
+      </div>
+
+      <div v-if="valueType == 'text'">
+        <textarea type="text" class="form-control" v-model="fieldValue"></textarea>
+      </div>
+    </div>
+  </div>
+</script>
+{% endverbatim %}
+
+<script>
+Vue.component('prop-value-editor', {
+  template: '#prop-value-editor',
+  props: ["value", "valueType", "choices"],
+  data: function() {
+    return { fieldValue: this.value }
+  },
+  methods: {
+  },
+  watch: {
+    fieldValue: function(v) {
+      this.$emit("change", v);
+    }
+  }
+})
+</script>
+
+<style>
+</style>

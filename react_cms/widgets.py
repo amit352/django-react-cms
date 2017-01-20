@@ -13,7 +13,9 @@ class ResourceEditorWidget(Widget):
   template_name = 'react_cms/widgets/resource_editor.html'
 
   def render(self, name, value, attrs=None, renderer=None):
-    context = Context({'value': mark_safe(value), 'components_json': mark_safe(json.dumps(self.build_available_components()))})
+    context = Context({'value': mark_safe(value),
+                       'available_languages': mark_safe(self.get_available_languages()),
+                       'components_json': mark_safe(json.dumps(self.build_available_components()))})
     return mark_safe(render_to_string(self.template_name, context))
 
   def build_available_components(self):
@@ -52,3 +54,8 @@ class ResourceEditorWidget(Widget):
               raise RuntimeError("Multiple react components named {} found. Rename one of them.".format(filename))
 
     return template_list
+
+  def get_available_languages(self):
+    languages = settings.LANGUAGES
+    #return [x[0] for x in languages]
+    return ['pt-BR', 'es-ES']
