@@ -16,7 +16,7 @@
           <td>{{ key }}</td>
           <td>
             <div v-if="editingField == key">  
-              <prop-value-editor v-on:change="node.messages[key][$parent.showInternationalizeModal]=$event" :value="node.messages[key][$parent.showInternationalizeModal]" :value-type="node.editableProps[$parent.showInternationalizeModal].type"></prop-value-editor>
+              <prop-value-editor v-on:change="updateField(key, $event)" :value="node.messages[key][$parent.showInternationalizeModal]" :value-type="node.editableProps[$parent.showInternationalizeModal].type"></prop-value-editor>
             </div>
             <span v-else>
               <span class="no-translation" v-if="_.isUndefined(value[$parent.showInternationalizeModal])">
@@ -27,12 +27,14 @@
               </span>
             </span>
 
-            <a href="#" class="edit-cell" @click.prevent="toggleEditingField(key)">
-              <i class="fa fa-pencil"></i>
-            </a>
-            <a href="#" v-if="editingField !== key" class="remove-cell" @click.prevent="removeField(key)">
-              <i class="fa fa-trash"></i>
-            </a>
+            <div class="buttons-container">
+              <a href="#" class="edit-cell" @click.prevent="toggleEditingField(key)">
+                <i class="fa fa-pencil"></i>
+              </a>
+              <a href="#" v-if="editingField !== key" class="remove-cell" @click.prevent="removeField(key)">
+                <i class="fa fa-trash"></i>
+              </a>
+            </div>
           </td>
         </tr>
       </table>
@@ -102,9 +104,20 @@ Vue.component('internationalize-modal', {
         Vue.delete(this.node.messages, key);
       }
     },
+    updateField: function(key, value) {
+      Vue.set(this.node.messages[key], this.$parent.showInternationalizeModal, value);
+    }
   },
   mounted: function() {
     this.editingField = false;
+
+    this.$watch(
+      'node',
+      function (newVal, oldVal) {
+        console.log(newVal);
+      },
+      { deep: true }
+    )
   }
 })
 </script>
@@ -113,6 +126,7 @@ Vue.component('internationalize-modal', {
 
 /*** Table Styles **/
   .c-internationalize-modal .table-fill {
+    position: relative;
     background: white;
     border-radius:3px;
     border-collapse: collapse;
@@ -238,6 +252,12 @@ Vue.component('internationalize-modal', {
     white-space: nowrap;
   }
 
+  .c-internationalize-modal .buttons-container {
+    position: absolute;
+    right: -8px;
+    margin-top: -41px;
+  }
+
   .c-internationalize-modal .edit-cell,
   .c-internationalize-modal .remove-cell {
     position: absolute;
@@ -250,12 +270,12 @@ Vue.component('internationalize-modal', {
     height: 27px;
     text-align: center;
     color: #4f7dda;
-    right: -10px;
+    right: 0px;
     top: 14px;
   }
 
   .c-internationalize-modal .remove-cell {
-    right: -40px;
+    right: -32px;
   }
 
   .c-internationalize-modal .no-translation {

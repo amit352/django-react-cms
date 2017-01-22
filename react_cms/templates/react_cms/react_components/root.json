@@ -1,0 +1,20 @@
+{
+  "info": {
+    "title": "Base Component",
+    "identifier": "root",
+    "editableProps": {
+      "title": {
+        "type": "string",
+        "label": "Title"
+      }
+    }
+  },
+  "representation": {
+    "title": "@title",
+    "body": [
+      {
+        "children": ["@@children"]
+      }
+   ]
+  }
+}

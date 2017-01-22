@@ -30,6 +30,6 @@
     "props": {
       "className": "@xs @sm @md @lg"
     },
-    "children": ["@text"]
+    "children": ["@@children"]
   }
 }

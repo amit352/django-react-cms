@@ -1,4 +1,5 @@
 from django.db import models
+from react_cms.renderers import ReactRenderer
 
 class ContentResource(models.Model):
   name = models.CharField("Resource Name", max_length=100)
@@ -7,4 +8,19 @@ class ContentResource(models.Model):
 
   def __str__(self):
     return "{} - {}".format(self.name, self.path)
+
+  def save(self):
+    super(ContentResource, self).save()
+
+    rendered = ReactRenderer(self.json).render()
+    print(rendered)
+
+    f = open('out', 'w')
+    f.write(rendered)
+    f.close()
+
+
+    import requests
+    r = requests.post("http://localhost:3000/api/cms/update", {"resourcePath": self.path})
+    import pudb;pudb.set_trace()
 

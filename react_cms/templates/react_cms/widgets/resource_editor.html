@@ -18,7 +18,7 @@
 
   <component-selector-modal></component-selector-modal>
 
-  <input type="hidden" name="json" v-bind:value="JSON.stringify(nodes)">
+  <input type="hidden" name="json" v-bind:value="renderJSON(nodes)">
   {{ nodes }}
 </div>
 {% endverbatim %}
@@ -53,11 +53,8 @@ var app = new Vue({
     addComponentTo: false,
   },
   mounted: function() {
-    this.$on('updateComponentsData', function() {
-      // This update a component data, such as editableProps from the lastest component version in availableComponents
-      // useful in case you don't want to delete and recreate the component after updating it
-      this.recursiveDataUpdate(this.nodes);
-    });
+    // This update a component data, such as editableProps from the lastest component version in availableComponents
+    // useful in case you don't want to delete and recreate the component after updating it
     this.recursiveDataUpdate(this.nodes);
   },
   methods: {
@@ -65,34 +62,41 @@ var app = new Vue({
       var vm = this;
 
       _.forEach(nodeList, function(node, index) {
-        if (node.identifier != "root") {
-          updatedComponent = vm.findComponentByIdentifier(node.identifier);
+        updatedComponent = vm.findComponentByIdentifier(node.identifier);
 
-          node.title = updatedComponent.title;
-          node.editableProps = updatedComponent.editableProps;
-          _.forEach(node.props, function(value, key) {
-            if (_.isUndefined(node.editableProps[key])) {
-              // Prop doesn't exist anymore
-              delete node.props[key];
-            } else if (!_.isUndefined(node.editableProps[key]['choices']) && !_.includes(node.editableProps[key]['choices'], value)) {
-              // Current value not a possible choice anymore
-              Vue.set(node.props[key], null);
-            }
-          });
+        node.title = updatedComponent.title;
+        node.editableProps = updatedComponent.editableProps;
 
-          // new props
-          _.forEach(node.editableProps, function(value, key) {
-            if (_.isUndefined(node.props[key])) {
-              Vue.set(node.props[key], null);
-            }
-          });
+        if (_.isUndefined(node.props)) {
+          Vue.set(node, 'props', {});
         }
+
+        _.forEach(node.props, function(value, key) {
+          if (_.isUndefined(node.editableProps[key])) {
+            // Prop doesn't exist anymore
+            delete node.props[key];
+          } else if (!_.isUndefined(node.editableProps[key]['choices']) && !_.includes(node.editableProps[key]['choices'], value)) {
+            // Current value not a possible choice anymore
+            Vue.set(node.props[key], null);
+          }
+        });
+
+        // new props
+        _.forEach(node.editableProps, function(value, key) {
+          if (_.isUndefined(node.props[key])) {
+            Vue.set(node.props, key, null);
+          }
+        });
         vm.recursiveDataUpdate(node.nodes);
       });
     },
 
     findComponentByIdentifier: function(identifier) {
       return _.find(this.availableComponents, { identifier: identifier });
+    },
+
+    renderJSON: function(nodes) {
+      return JSON.stringify(nodes);
     }
   }
 });
