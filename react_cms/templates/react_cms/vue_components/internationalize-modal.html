@@ -82,12 +82,14 @@ Vue.component('internationalize-modal', {
       }
     },
     addTranslation: function() {
-      if (_.isUndefined(this.node.messages)) {
-        Vue.set(this.node, 'messages', {});
-      } 
+      if (this.choosenLanguage) {
+        if (_.isUndefined(this.node.messages)) {
+          Vue.set(this.node, 'messages', {});
+        } 
 
-      if (_.isUndefined(this.node.messages[this.choosenLanguage])) {
-        Vue.set(this.node.messages, this.choosenLanguage, {});
+        if (_.isUndefined(this.node.messages[this.choosenLanguage])) {
+          Vue.set(this.node.messages, this.choosenLanguage, {});
+        }
       }
     },
     toggleEditingField: function(key) {
