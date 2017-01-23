@@ -1,5 +1,6 @@
 from django.db import models
 from react_cms.renderers import ReactRenderer
+from react_cms.helpers import get_settings
 import requests
 
 from django.db.models.signals import post_save
@@ -21,9 +22,12 @@ class ContentResource(models.Model):
 
 @receiver(post_save, sender=ContentResource, dispatch_uid="notify_client")
 def notify_client(sender, instance, **kwargs):
-  def on_commit():
-    r = requests.post("http://localhost:3000/api/cms/update", {"resourcePath": instance.path})
-  transaction.on_commit(on_commit)
+  s = get_settings()
+  notify_url = s.get('CLIENT_URL', '')
+  if notify_url:
+    def on_commit():
+      r = requests.post(notify_url, {"resourcePath": instance.path})
+    transaction.on_commit(on_commit)
 
 
 class UploadedFile(models.Model):

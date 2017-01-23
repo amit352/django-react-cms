@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from django.conf import settings
 
 def rep(value, find, replace):
   if isinstance(value, str):
@@ -11,7 +12,10 @@ def rep(value, find, replace):
   return value
 
 def dict_replace(dictionary, find, replace):
-  """ Find and replace values inside a dictionary"""
+  """ Find and replace values inside a dictionary """
   for (key, value) in dictionary.items():
     dictionary[key] = rep(value, find, replace)
   return dictionary
+
+def get_settings(string="REACT_CMS"):
+  return getattr(settings, string, {})
