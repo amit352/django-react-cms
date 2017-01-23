@@ -12,8 +12,8 @@
         "type": "string"
       },
       "image": {
-        "label": "Image link",
-        "type": "string"
+        "label": "Image",
+        "type": "upload"
       }
     }
   },

@@ -22,7 +22,7 @@
     }
   },
   "representation": {
-    "component": "timeline-item",
+    "component": "statistics-timeline-item",
     "children": [],
     "props": {
       "year": "@year",

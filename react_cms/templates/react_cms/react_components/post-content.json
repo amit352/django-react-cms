@@ -1,12 +1,12 @@
 {
   "info": {
-    "title": "Row",
-    "identifier": "row",
+    "title": "Post Content",
+    "identifier": "post-content",
     "editableProps": {}
   },
   "representation": {
     "props": {
-      "className": "row"
+      "className": "post"
     },
     "children": ["@@children"]
   }

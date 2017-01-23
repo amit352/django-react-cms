@@ -7,6 +7,26 @@
       </select>
     </div>
     <div v-else>
+      <div v-if="valueType == 'upload'" class="uploads">
+        <div v-if="uploading">
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+        <div v-else>
+          <div v-if="fieldValue">
+            <a :href="fieldValue" target="_blank">
+              File link
+            </a><br />
+            <a href="#" @click.prevent="fieldValue = ''">
+              (Remove file)
+            </a>
+          </div>
+          <div v-else>
+            <input type="file" @change="onFileChange">
+          </div>
+        </div>
+      </div>
+
+
       <div v-if="valueType == 'string'">
         <input type="text" class="form-control" v-model="fieldValue">
       </div>
@@ -24,9 +44,39 @@ Vue.component('prop-value-editor', {
   template: '#prop-value-editor',
   props: ["value", "valueType", "choices"],
   data: function() {
-    return { fieldValue: this.value }
+    return {
+      fieldValue: this.value,
+      uploading: false
+    };
   },
   methods: {
+    onFileChange: function(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+
+      var vm = this;
+      this.uploading = true;
+
+      axios.get("/admin/react_cms/uploadedfile/add/")
+        .then(function(response) {
+          var rg = /'csrfmiddlewaretoken' value='(.*)'/.exec(response.data);
+          csrf_token = rg[1];
+
+          var data = new FormData();
+          data.append('csrfmiddlewaretoken', csrf_token);
+          data.append('file', files[0]);
+          data.append('_continue', true);
+
+          axios.post("/admin/react_cms/uploadedfile/add/", data)
+            .then(function(response) {
+              var path = /<p class="file-upload">Currently: <a href="(.*)">/.exec(response.data);
+              var full_url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + path[1];
+              vm.uploading = false;
+              vm.fieldValue = full_url;
+            })
+        })
+    }
   },
   watch: {
     fieldValue: function(v) {
@@ -37,4 +87,7 @@ Vue.component('prop-value-editor', {
 </script>
 
 <style>
+  .c-prop-value-editor {
+    
+  }
 </style>

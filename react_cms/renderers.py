@@ -3,7 +3,7 @@ import uuid
 from collections import OrderedDict
 from django.template.loader import render_to_string
 from react_cms.helpers import dict_replace
-
+from django.utils.text import normalize_newlines
 
 class ReactRenderer():
   def __init__(self, json):
@@ -38,7 +38,7 @@ class ReactRenderer():
     """ Render node props """
     if 'props' in node:
       for (prop, value) in node['props'].items():
-        replace_with = value
+        replace_with = self.filter_value(value)
         prop_uuid = False
 
         if 'messages' in node:
@@ -46,7 +46,7 @@ class ReactRenderer():
             if prop in content:
               if prop_uuid == False:
                 prop_uuid = self._generate_uuid()
-                replace_with = prop_uuid
+                replace_with = "{{%s}}" % prop_uuid
                 self._add_prop_to_messages('$default', prop_uuid, value)
 
               self._add_prop_to_messages(language, prop_uuid, content[prop])
@@ -63,10 +63,11 @@ class ReactRenderer():
     return json.loads(node_with_children, object_pairs_hook=OrderedDict)
 
   def _add_prop_to_messages(self, language, uuid, value):
-    if language not in self.messages:
-      self.messages[language] = {}
+    lc_language = language.lower()
+    if lc_language not in self.messages:
+      self.messages[lc_language] = {}
 
-    self.messages[language][uuid] = value
+    self.messages[lc_language][uuid] = value
 
   def _generate_uuid(self):
     # I'll probably have won the lottery when this happens
@@ -77,3 +78,8 @@ class ReactRenderer():
         self.used_uuids.append(u)
         break
     return u
+
+  def filter_value(self, value):
+    """ Apply filters. """
+    v = normalize_newlines(value)
+    return v.replace("\n", "<br />")

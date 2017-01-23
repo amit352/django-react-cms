@@ -42,6 +42,7 @@ Vue.component('node-editor', {
   methods: {
     removeNode: function(index) {
       if (confirm("Do you want to delete this component? Child components will also be removed. This cannot be undone.")) {
+        this.editProps = false;
         this.children.splice(index, 1);
       }
     },
