@@ -5,7 +5,7 @@
       <a href="#" title="Close" @click.prevent="$parent.showMover = false" class="close-mover"><i class="fa fa-close"></i></a>
       <a href="#" title="Move node up" @click.prevent="moveNodeToIndex(node, index-1, true)" v-bind:class="{ 'not-active': (index <= 0) }"><i class="fa fa-chevron-up"></i></a>
       <a href="#" title="Move node down" @click.prevent="moveNodeToIndex(node, index+1, true)" v-bind:class="{ 'not-active': (index >= nodeList.length-1) }"><i class="fa fa-chevron-down"></i></a>
-      <a href="#" title="Move node one level up" @click.prevent="" v-bind:class="{ 'not-active': (index <= 0) }"><i class="fa fa-long-arrow-left"></i></a>
+      <!--<a href="#" title="Move node one level up" @click.prevent="" v-bind:class="{ 'not-active': (index <= 0) }"><i class="fa fa-long-arrow-left"></i></a>-->
       <!--<a href="#" title="Move node one level down" @click.prevent="" v-bind:class="{ 'not-active': (index >= nodeList.length-1) }"><i class="fa fa-long-arrow-right"></i></a>-->
     </div>
   </div>
