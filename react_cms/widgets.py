@@ -23,7 +23,10 @@ class ResourceEditorWidget(Widget):
     templates = ComponentFinder().find()
 
     for template in templates:
-      t = json.loads(render_to_string('react_cms/react_components/{}'.format(template)), object_pairs_hook=OrderedDict)
+      try:
+        t = json.loads(render_to_string('react_cms/react_components/{}'.format(template)), object_pairs_hook=OrderedDict)
+      except ValueError as e:
+        raise ValueError("Failed decoding JSON on react_cms/react_components/{}. {}".format(template, e))
       components.append(self.prepare_component(t["info"]))
 
     return components
