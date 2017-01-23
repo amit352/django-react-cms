@@ -8,7 +8,7 @@ from django.db import transaction
 
 class ContentResource(models.Model):
   name = models.CharField("Resource Name", max_length=100)
-  path = models.CharField("Resource Path", max_length=1000)
+  path = models.CharField("Resource Path", max_length=1000, unique=True)
   json = models.TextField("Components", blank=True, null=True)
   rendered = models.TextField("Rendered component", blank=True, null=True)
 
