@@ -3,6 +3,8 @@ from django.conf import settings
 
 def rep(value, find, replace):
   if isinstance(value, str):
+    if replace is None:
+      replace = ''
     value = value.replace(find, replace)
   if isinstance(value, dict) or isinstance(value, OrderedDict):
     value = dict_replace(value, find, replace)
