@@ -10,7 +10,8 @@ class ComponentFinder():
       template_dir_list.append(each)
 
     template_list = []
-    for each in (template_dir_list + settings.TEMPLATES[0]['DIRS']):
+    template_dirs = template_dir_list + settings.TEMPLATES[0]['DIRS']
+    for each in template_dirs:
       for dir, dirnames, filenames in os.walk(each):
         for filename in filenames:
           path = os.path.join(dir, filename)

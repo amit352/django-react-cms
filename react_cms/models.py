@@ -22,12 +22,13 @@ class ContentResource(models.Model):
 
 @receiver(post_save, sender=ContentResource, dispatch_uid="notify_client")
 def notify_client(sender, instance, **kwargs):
-  s = get_settings()
-  notify_url = s.get('CLIENT_URL', '')
-  if notify_url:
-    def on_commit():
-      r = requests.post(notify_url, {"resourcePath": instance.path})
-    transaction.on_commit(on_commit)
+  if not kwargs.get('raw'):
+    s = get_settings()
+    notify_url = s.get('CLIENT_URL', '')
+    if notify_url:
+      def on_commit():
+        r = requests.post(notify_url, {"resourcePath": instance.path})
+      transaction.on_commit(on_commit)
 
 
 class UploadedFile(models.Model):
