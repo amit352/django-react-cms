@@ -15,6 +15,7 @@ class ResourceEditorWidget(Widget):
   def render(self, name, value, attrs=None, renderer=None):
     context = Context({'value': mark_safe(value),
                        'available_languages': mark_safe(self.get_available_languages()),
+                       'strip_parameters': self.get_strip_parameters(),
                        'components_json': mark_safe(json.dumps(self.build_available_components()))})
     return mark_safe(render_to_string(self.template_name, context))
 
@@ -43,3 +44,8 @@ class ResourceEditorWidget(Widget):
     languages = list(settings.LANGUAGES)
     languages.pop(0) # First language is default
     return [x[0] for x in languages]
+
+  def get_strip_parameters(self):
+    s = getattr(settings, 'REACT_CMS', {})
+    strip = s.get('STRIP_PARAMETERS_FROM_FILE_URL', False)
+    return 'true' if strip else 'false'

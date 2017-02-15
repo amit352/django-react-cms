@@ -71,12 +71,19 @@ Vue.component('prop-value-editor', {
           axios.post("/admin/react_cms/uploadedfile/add/", data)
             .then(function(response) {
               var path = /<p class="file-upload">Currently: <a href="(.*)">/.exec(response.data);
+
               // path can either be a relative path, like /xxxx or a full url with protocol and hostname
               if (path[1].substring(0,4) === "http") {
                 var full_url = path[1];
               } else {
                 var full_url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + path[1];
               }
+
+              if (vm.$root.stripParametersFromFileUrl) {
+                full_url = full_url.split('?')[0];
+                console.log(full_url);
+              }
+
               vm.uploading = false;
               vm.fieldValue = full_url;
             })
