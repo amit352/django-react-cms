@@ -73,7 +73,7 @@ Vue.component('prop-value-editor', {
               var path = /<p class="file-upload">Currently: <a href="(.*)">/.exec(response.data);
               // path can either be a relative path, like /xxxx or a full url with protocol and hostname
               if (path[1].substring(0,4) === "http") {
-                var full_url = path;
+                var full_url = path[1];
               } else {
                 var full_url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + path[1];
               }
