@@ -80,8 +80,10 @@ class ReactRenderer():
     return u
 
   def filter_value(self, value):
-    """ Apply filters. """
+    """ Apply filters.
+
+    (there are currently none)
+    """
     if value is not None:
-      v = normalize_newlines(value)
-      return v.replace("\n", "<br />")
+      return value
     return None
