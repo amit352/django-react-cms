@@ -3,7 +3,6 @@ import json
 from django.forms.widgets import Widget
 from django.conf import settings
 from django.utils.safestring import mark_safe
-from django.template import Context
 from django.template.loader import render_to_string
 from collections import OrderedDict
 
@@ -13,10 +12,10 @@ class ResourceEditorWidget(Widget):
   template_name = 'react_cms/widgets/resource_editor.html'
 
   def render(self, name, value, attrs=None, renderer=None):
-    context = Context({'value': mark_safe(value),
+    context = {'value': mark_safe(value),
                        'available_languages': mark_safe(self.get_available_languages()),
                        'strip_parameters': self.get_strip_parameters(),
-                       'components_json': mark_safe(json.dumps(self.build_available_components()))})
+                       'components_json': mark_safe(json.dumps(self.build_available_components()))}
     return mark_safe(render_to_string(self.template_name, context))
 
   def build_available_components(self):
