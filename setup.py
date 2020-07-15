@@ -5,13 +5,13 @@ import cms
 
 INSTALL_REQUIREMENTS = [
     'Django>=1.11,<4',
-    'codecov'
-    'coverage'
+    'codecov>=2.0.5',
+    'coverage>=4.2'
 ]
 
 setup(
     name='django-react-cms',
-    version='0.1.2',
+    version='0.1.3',
     author=u'Leonardo Arroyo',
     author_email='contato@leonardoarroyo.com',
     packages=find_packages(),
