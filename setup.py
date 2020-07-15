@@ -3,6 +3,12 @@ from setuptools import setup, find_packages
 import os
 import cms
 
+INSTALL_REQUIREMENTS = [
+    'Django>=1.11,<4',
+    'codecov'
+    'coverage'
+]
+
 setup(
     name='django-react-cms',
     version='0.1.0',
