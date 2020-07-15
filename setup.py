@@ -11,7 +11,7 @@ INSTALL_REQUIREMENTS = [
 
 setup(
     name='django-react-cms',
-    version='0.1.0',
+    version='0.1.2',
     author=u'Leonardo Arroyo',
     author_email='contato@leonardoarroyo.com',
     packages=find_packages(),
